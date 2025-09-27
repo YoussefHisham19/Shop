@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Checkout</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 1rem; }
+    label { display:block; margin-top:1rem; }
+    input, select { width:100%; padding:0.5rem; margin-top:0.5rem; }
+    button { margin-top:1.5rem; padding:0.75rem; width:100%; border:none; background:#25D366; color:#fff; border-radius:8px; cursor:pointer; font-size:1rem; }
+    button:hover { background:#20b955; }
+  </style>
+</head>
+<body>
+  <h2>Checkout</h2>
+  <form id="checkoutForm">
+    <label>Full Name
+      <input type="text" id="name" required>
+    </label>
+    <label>Phone Number
+      <input type="text" id="phone" required>
+    </label>
+    <label>Address
+      <input type="text" id="address" required>
+    </label>
+    <label>Payment Method
+      <select id="payment">
+        <option value="Cash on Delivery">Cash on Delivery</option>
+        <option value="Credit Card">Credit Card</option>
+        <option value="Bank Transfer">Bank Transfer</option>
+      </select>
+    </label>
+    <button type="submit">Place Order via WhatsApp</button>
+  </form>
+
+  <script>
+    document.getElementById('checkoutForm').addEventListener('submit', function(e){
+      e.preventDefault();
+
+      // بيانات العميل
+      const name = document.getElementById('name').value;
+      const phone = document.getElementById('phone').value;
+      const address = document.getElementById('address').value;
+      const payment = document.getElementById('payment').value;
+
+      // بيانات السلة من localStorage
+      const cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+      if(cart.length === 0){
+        alert("Your cart is empty!");
+        return;
+      }
+
+      let itemsText = cart.map(item => 
+        `• ${item.title} x${item.qty || 1} - ${item.price} EGP`
+      ).join("\n");
+
+      const total = cart.reduce((sum, item) => sum + (item.price * (item.qty || 1)), 0);
+
+      // رقم الواتس بتاعك ← استبدل 2010xxxxxxx برقمك
+      const businessNumber = "2010xxxxxxx";
+
+      const message = `New Order 🛒\n\nCustomer: ${name}\nPhone: ${phone}\nAddress: ${address}\nPayment: ${payment}\n\nItems:\n${itemsText}\n\nTotal: ${total} EGP`;
+
+      const url = `https://wa.me/${businessNumber}?text=${encodeURIComponent(message)}`;
+
+      window.open(url, "_blank");
+    });
+  </script>
+</body>
+</html>

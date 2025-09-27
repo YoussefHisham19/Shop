@@ -1,0 +1,529 @@
+ <!-- <!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Cart</title>
+  <style>
+nav{
+    display: flex ;
+    position:relative ;
+    z-index:2 ;
+    margin:1rem ;
+    align-items :center ;
+    justify-content:space-between ;
+}
+nav img{
+    object-fit: contain ;
+    height:100%;
+    border-radius:3rem ;
+}
+nav img:hover{
+    background:#000000BD;
+    transition: 0.3s ;
+    padding: 1rem ;
+}
+nav div img{
+    margin:0.25rem  ;
+}
+h2{
+  font-family: "Cormorant", serif;
+  font-optical-sizing: auto;
+  font-weight: 1000 ;
+  font-style: normal;
+}
+
+
+#menubar{
+    flex-direction:column ;
+    margin:none;
+    position:relative ;
+    left :0 ;
+    display: flex ;
+    
+}
+#menubar #menu{
+    display:none;
+    border-radius:2rem ;
+    color:#FFFFFF ;
+    position:absolute ;
+    background: #877A7AB8;
+    width:50%;
+    padding: 2rem 8rem 6rem 0 ;
+    left:0 ;
+    top: 3rem ;
+    
+}
+#menubar a{
+    text-decoration:none ;
+    
+    margin:0.25rem ;
+   /* border-bottom:2px solid #FFFFFF;*/
+   color:#FFFFFF ;
+   padding: 2rem ;
+}
+#menubar ul{
+    list-style-type:none ;
+}
+@media(max-width:600px ) {
+   nav img{
+    width:1.5rem;
+}
+
+header img{
+    width:100%;
+}
+}
+@media(min-width: 601px){
+   /* nav{
+        color:#FFFFFF;
+    }*/
+nav img {
+    width : 3rem;
+}
+nav h2{
+    font-size:2rem ;
+}
+
+}
+article div{
+    display:flex ;
+    justify-content:space-between ;
+}
+  </style>
+    <style>
+@import url('https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,300..700;1,300..700&family=Felipa&family=Handlee&family=Kaushan+Script&family=Lexend+Deca:wght@100..900&display=swap');
+</style>
+</head>
+<body>
+    <h2>Your Cart</h2>
+<div id="cart-container"></div>
+<h3 id="total"></h3>
+
+<script>
+  let cart = JSON.parse(localStorage.getItem("cart")) || [];
+  const container = document.getElementById("cart-container");
+  const totalEl = document.getElementById("total");
+
+  function renderCart() {
+    container.innerHTML = "";
+    let total = 0;
+    cart.forEach((item, i) => {
+      total += item.price * item.qty;
+      container.innerHTML += `
+        <div>
+          <img src="${item.img}" width="80">
+          <h4>${item.title}</h4>
+          <p>${item.price} $</p>
+          <p>Qty: 
+            <button onclick="updateQty(${i}, -1)">-</button>
+            ${item.qty}
+            <button onclick="updateQty(${i}, 1)">+</button>
+          </p>
+        </div>
+      `;
+    });
+    totalEl.textContent = "Total: " + total + " $";
+  }
+
+  function updateQty(index, change) {
+    cart[index].qty += change;
+    if (cart[index].qty <= 0) cart.splice(index, 1);
+    localStorage.setItem("cart", JSON.stringify(cart));
+    renderCart();
+  }
+
+  renderCart();
+</script>
+<nav id="nav"> 
+    <img src="menu.webp" class="menu">
+<h2 class="logo">
+ Ready
+</h2>
+    <div>
+  <img src="search.webp" class="search">
+<a href="Cart.html">
+    <img src="shopping.webp" alt="Cart" class="cart"></a></div>
+   
+</nav>
+<header>
+    <h3>
+cart
+    </h3>
+</header>
+<section>
+
+</section>
+<article>
+<h3>
+Order summary
+</h3><div>
+<p>
+subtotal(Items) 
+</p>
+<p>
+333
+</p></div>
+</article>
+</body>
+</html>-->
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Cart</title>
+  <style>
+    body{
+      font-family: "Lexend Deca", sans-serif;
+      margin:0;
+      padding:0;
+      background:#f7f7f7;
+    }
+    nav{
+      display: flex ;
+      position:relative ;
+      z-index:2 ;
+      margin:1rem ;
+      align-items :center ;
+      justify-content:space-between ;
+    }
+    nav img{
+      object-fit: contain ;
+      height:100%;
+      border-radius:3rem ;
+    }
+    nav div img{
+      margin:0.25rem  ;
+      width:2rem;
+      cursor:pointer;
+    }
+    h2{
+      font-family: "Cormorant", serif;
+      font-weight: 700;
+      margin:1rem;
+    }
+
+    /* cart layout */
+    .cart-wrapper{
+      display:flex;
+      flex-wrap:wrap;
+      gap:2rem;
+    /*  margin:1rem;*/
+      
+    }
+    #cart-container{
+      flex:2;
+      background:#fff;
+      padding:1rem;
+      border-radius:1rem;
+      box-shadow:0 2px 5px rgba(0,0,0,0.1);
+    }
+    #cart-container div{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      border-bottom:1px solid #ddd;
+      padding:0.5rem 0;
+    }
+    #cart-container img{
+      border-radius:0.5rem;
+      margin-right:1rem;
+    }
+    #cart-container h4{
+      margin:0;
+    }
+    #cart-container button{
+      padding:0.25rem 0.5rem;
+      margin:0 0.25rem;
+      cursor:pointer;
+    }
+
+    /* order summary */
+    .summary{
+      flex:1;
+      background:#fff;
+      padding:1rem;
+      border-radius:1rem;
+      box-shadow:0 2px 5px rgba(0,0,0,0.1);
+      height:fit-content;
+      width:90% ;
+    }
+    .summary h3{
+      margin-top:0;
+    }
+    .summary div{
+      display:flex;
+      justify-content:space-between;
+      margin:0.5rem 0;
+    }
+    .checkout{
+      background:#000;
+      color:#fff;
+     padding:0.75rem;
+      width:90%;
+      border:none;
+      border-radius:0.5rem;
+      cursor:pointer;
+      font-size:1rem;
+    }
+    .checkout:hover{
+      background:#333;
+    }
+
+    @media(max-width:768px){
+      .cart-wrapper{
+        flex-direction:column;
+      }
+    }
+  </style>
+  <style>
+  @import url('https://fonts.googleapis.com/css2?family=Cormorant:wght@600&family=Lexend+Deca:wght@300;500&display=swap');
+  </style>
+</head>
+<body>
+<nav id="nav">
+  <nav>
+  <button id="menubtn">☰</button>
+  <ul id="menu">
+    <li><a href="index.html">Home</a></li>
+   <li><a href="store.html?category=dressing room">Dressing room </a></li>
+   <li><a href="store.html?category=bedroom">Bedroom</a></li>
+   <li><a href="store.html?category=kitchen">Kitchen</a></li>
+   <li><a href="store.html?category=livingroom">LivingRoom</a></li>
+   <li><a href="store.html?category=dining">Dining room </a></li>
+  </ul>
+</nav>
+
+<style>
+
+nav{
+    display: flex ;
+    position:sticky ;
+    top: 0;
+    width:90%;
+    z-index:2 ;
+    
+    align-items :center ;
+    justify-content:space-between ;
+    background: #FFFFFF ;
+}
+nav div{
+    display:flex ;
+}
+nav img{
+    object-fit: contain ;
+    height:100%;
+    border-radius:3rem ;
+}
+nav img:hover{
+    transform: scale(1.1);
+    transition: 0.3s ;
+    
+}
+*{
+  margin:0;
+  padding: 0;
+}
+nav div img{
+    margin:0.25rem  ;
+}
+#searchbox {
+  display: none;
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+
+
+  #menubtn {
+    /*position: fixed;
+    top: 1rem;
+    left: 1rem;*/
+    z-index: 1000;
+    font-size: 1.5rem;
+    background: black;
+    color: white;
+    border: none;
+   padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    cursor: pointer;
+  }
+
+  #menu {
+   position: fixed;
+    top: 6rem ;
+    left: 3rem ;
+    display: none;
+    background: rgba(0,0,0,0.8);
+    color: white;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    z-index: 999;
+  }
+
+  #menu li {
+    list-style: none;
+    margin: 0.5rem 0;
+  }
+
+  #menu li a {
+    color: white;
+    text-decoration: none;
+  }
+  #menu li a:hover{
+    background:#FFFFFF ;
+    color: #000000 ;
+    border-radius:1rem ;
+    padding:0.5rem ;
+    transition:0.3s ;
+  }
+</style>
+
+<script>
+  const menubtn = document.getElementById("menubtn");
+  const menu = document.getElementById("menu");
+
+  menubtn.addEventListener("click", () => {
+    if(menu.style.display === "block") {
+      menu.style.display = "none";
+    } else {
+      menu.style.display = "block";
+    }
+  });
+</script>
+
+  <h3>
+Ready
+  </h3>
+  <div>
+    <button onclick="toggleSearch()">
+    <img src="search.webp" alt="">
+    </button>
+    <input type="text" placeholder="search" id="searchbox">
+    
+ 
+  <a href="Cart.html">
+    <img src="shopping.webp" alt="Cart" class="cart"></a></div>
+   
+</nav>
+
+  <h2>Your Cart</h2>
+  <div class="cart-wrapper">
+    <!-- Cart Items -->
+    <div id="cart-container"></div>
+
+    <!-- Summary -->
+    <div class="summary">
+      <h3>Order Summary</h3>
+      <div>
+        <p>Subtotal (Items)</p>
+        <p id="subtotal">0</p>
+      </div>
+      <div>
+        <p>Shipping</p>
+        <p>Free</p>
+      </div>
+      <div>
+        <strong>Total</strong>
+        <strong id="total">0 $</strong>
+      </div><a href="Ckeckout.html">
+      <button class="checkout">Proceed to Checkout</button></a>
+    </div>
+  </div>
+
+<script>
+  let cart = JSON.parse(localStorage.getItem("cart")) || [];
+  const container = document.getElementById("cart-container");
+  const subtotalEl = document.getElementById("subtotal");
+  const totalEl = document.getElementById("total");
+
+  function renderCart() {
+    container.innerHTML = "";
+    let total = 0;
+    cart.forEach((item, i) => {
+      total += item.price * item.qty;
+      container.innerHTML += `
+        <div>
+          <img src="${item.image}" width="80">
+          <div style="flex:1">
+            <h4>${item.title}</h4>
+            <p>${item.price} EGP</p>
+          </div>
+          <div>
+            <button onclick="updateQty(${i}, -1)">-</button>
+            ${item.qty}
+            <button onclick="updateQty(${i}, 1)">+</button>
+          </div>
+          <button onclick="removeItem(${i})" style="color:red;border:none;background:none;cursor:pointer;">x</button>
+        </div>
+      `;
+    });
+    subtotalEl.textContent = cart.length + " items";
+    totalEl.textContent = total + " EGP";
+  }
+
+  function updateQty(index, change) {
+    cart[index].qty += change;
+    if (cart[index].qty <= 0) cart.splice(index, 1);
+    localStorage.setItem("cart", JSON.stringify(cart));
+    renderCart();
+  }
+
+  function removeItem(index){
+    cart.splice(index,1);
+    localStorage.setItem("cart", JSON.stringify(cart));
+    renderCart();
+  }
+
+  renderCart();
+  
+    
+
+function toggleSearch() {
+  const searchBox = document.getElementById("searchbox");
+  if (searchBox.style.display === "block") {
+    searchBox.style.display = "none";
+  } else {
+    searchBox.style.display = "block";
+    searchBox.focus();
+  }
+}
+
+// عناصر الـ sections
+const searchBox = document.getElementById("searchbox");
+const sections = document.querySelectorAll("#sections a");
+
+// البحث
+searchBox.addEventListener("input", () => {
+  const query = searchBox.value.toLowerCase();
+  sections.forEach(section => {
+    const text = section.textContent.toLowerCase();
+    if (text.includes(query)) {
+      section.style.display = "block";
+    } else {
+      section.style.display = "none";
+    }
+  });
+});
+
+
+
+
+// لو ضغطت برا searchbox أو menu → يقفلوا
+document.addEventListener("click", (e) => {
+  // لو الكليك مش جوه الـ menu أو الزر
+  if (!menu.contains(e.target) && e.target !== menubtn) {
+    menu.style.display = "none";
+  }
+
+  // لو الكليك مش جوه الـ searchbox
+  if (!searchBox.contains(e.target) && e.target.tagName !== "BUTTON" && e.target.tagName !== "IMG") {
+    searchBox.style.display = "none";
+  }
+});
+  
+</script>
+</body>
+</html>

@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Already ready</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+@import url('https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,300..700;1,300..700&family=Felipa&family=Handlee&family=Kaushan+Script&family=Lexend+Deca:wght@100..900&display=swap');
+</style>
+</head>
+<body>
+<nav id="nav">
+  <nav>
+  <button id="menubtn">☰</button>
+  <ul id="menu">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="store.html">All products</a></li>
+   <li><a href="store.html?category=dressing room">Dressing room </a></li>
+   <li><a href="store.html?category=bedroom">Bedroom</a></li>
+   <li><a href="store.html?category=kitchen">Kitchen</a></li>
+   <li><a href="store.html?category=livingroom">LivingRoom</a></li>
+   <li><a href="store.html?category=dining">Dining room </a></li>
+  </ul>
+</nav>
+
+<style>
+  #menubtn {
+    /*position: fixed;
+    top: 1rem;
+    left: 1rem;*/
+    z-index: 1000;
+    font-size: 1.5rem;
+    background: black;
+    color: white;
+    border: none;
+   padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    cursor: pointer;
+  }
+
+  #menu {
+   position: fixed;
+    top: 1rem ;
+    left: 3rem ;
+    display: none;
+    background: rgba(0,0,0,0.8);
+    color: white;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    z-index: 999;
+  }
+
+  #menu li {
+    list-style: none;
+    margin: 0.5rem 0;
+  }
+
+  #menu li a {
+    color: white;
+    text-decoration: none;
+  }
+  #menu li a:hover{
+    background:#FFFFFF ;
+    color: #000000 ;
+    border-radius:1rem ;
+    padding:0.5rem ;
+    transition:0.3s ;
+  }
+
+</style>
+
+<script>
+  const menubtn = document.getElementById("menubtn");
+  const menu = document.getElementById("menu");
+
+  menubtn.addEventListener("click", () => {
+    if(menu.style.display === "block") {
+      menu.style.display = "none";
+    } else {
+      menu.style.display = "block";
+    }
+  });
+</script>
+
+  <h3>
+Ready
+  </h3>
+  <div>
+    <button onclick="toggleSearch()">
+    <img src="search.webp" alt="">
+    </button>
+    <input type="text" placeholder="search" id="searchbox">
+    
+ 
+  <a href="Cart.html">
+    <img src="shopping.webp" alt="Cart" class="cart"></a></div>
+   
+</nav>
+<header id="header">
+  <img src="Forward.jpg" alt="back header"><div>
+<p>
+      Are you Ready? 
+    </p>
+    <button onclick="location.href='#sections'">
+shop now
+    </button></div>
+</header>
+<!--<section id="newArrivel">
+  <h3>
+New arrivel
+  </h3>
+  <img src="DiningTable.jpg">
+</section>
+
+
+
+<section id="offers">
+<h3>
+offers
+</h3>
+<div class="offerProducts">
+  <img src="Bedroom.jpg">
+</div>
+</section>-->
+
+
+
+<section id="sections">
+<a href="store.html?category=dining">
+<img src="DiningTable.jpg">
+<p>Dining Tables ➡</p>
+</a>
+<a href="store.html?category=livingroom">
+<img src="Livingroom.jpg">
+<p>Living rooms  ➡</p> 
+</a>
+<a href="store.html?category=kitchen">
+  <img src="Kitchen.jpg">
+  <p>Kitchen ➡</p>
+</a>
+<a href="store.html?category=bedroom">
+  <img src="Bedroom.jpg">
+  <p>Bedrooms ➡</p>
+</a>
+<a href="store.html?category=dressing room">
+  <img src="Dressingroom.jpg">
+  <p>Dressing room ➡</p>
+</a>
+</section>
+<a href="#header">
+<img src="Up.webp" id="up"></a>
+  <script src="main.js"></script>
+  
+  
+  
+  <script>
+
+function toggleSearch() {
+  const searchBox = document.getElementById("searchbox");
+  if (searchBox.style.display === "block") {
+    searchBox.style.display = "none";
+  } else {
+    searchBox.style.display = "block";
+    searchBox.focus();
+  }
+}
+
+// عناصر الـ sections
+const searchBox = document.getElementById("searchbox");
+const sections = document.querySelectorAll("#sections a");
+
+// البحث
+searchBox.addEventListener("input", () => {
+  const query = searchBox.value.toLowerCase();
+  sections.forEach(section => {
+    const text = section.textContent.toLowerCase();
+    if (text.includes(query)) {
+      section.style.display = "block";
+    } else {
+      section.style.display = "none";
+    }
+  });
+});
+
+
+
+
+// لو ضغطت برا searchbox أو menu → يقفلوا
+document.addEventListener("click", (e) => {
+  // لو الكليك مش جوه الـ menu أو الزر
+  if (!menu.contains(e.target) && e.target !== menubtn) {
+    menu.style.display = "none";
+  }
+
+  // لو الكليك مش جوه الـ searchbox
+  if (!searchBox.contains(e.target) && e.target.tagName !== "BUTTON" && e.target.tagName !== "IMG") {
+    searchBox.style.display = "none";
+  }
+});
+  </script>
+</body>
+</html>

@@ -1,0 +1,482 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>CRUDS</title>
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body { font-family:Arial, sans-serif; padding:1rem; }
+
+    .login, .dashboard, .cruds {
+      margin: 1rem auto; max-width: 800px;
+    }
+    .login { text-align:center; }
+    .login input, .login button { margin:0.5rem; padding:0.5rem; }
+
+    .hidden { display:none; }
+    table { width:100%; border-collapse: collapse; margin-top:1rem; }
+    th, td { border:1px solid #ddd; padding:0.5rem; text-align:center; }
+    img { max-width:60px; }
+    .price { display:flex; gap:0.5rem; align-items:center; }
+    .price small { font-weight:bold; color:green; }
+    button{
+      color: #FFFFFF ;
+      background: #000000 ;
+      width: 80%;
+      margin:auto ;
+      border-radius:3rem ;
+      border: none ;
+      padding: 0.5rem ;
+      margin:0.25rem ;
+    }
+    button:hover{
+      box-shadow:0 0 1rem#000000 ;
+    }
+    input{
+      width:90%;
+      margin:0.25rem auto;
+      height:2rem;
+      padding:1rem ;
+      
+    }
+    input:hover{
+      background:#000000 ;
+      color:#FFFFFF ;
+      box-shadow:0 0 1rem#000000 ;
+    }
+   .cruds{
+      width:100%;
+      text-align:center ;
+    }
+  </style>
+</head>
+<body>
+   
+  <!-- Login -->
+  <div class="login" id="loginSection">
+    <h2>Admin login</h2>
+    <input type="text" id="username" placeholder="username">
+    <input type="password" id="password" placeholder="password">
+    <button onclick="login()">Login</button>
+    <p id="loginMsg" style="color:red"></p>
+  </div>
+
+  <!-- Dashboard -->
+  <div class="cruds hidden" id="crudSection">
+    <div class="head">
+      <h2>Dashboard</h2>
+      <p>Product Management System</p>
+    </div>
+
+    <div class="inputs">
+      <input type="text" id="title" placeholder="product name">
+      <input type="text" id="description" placeholder="description">
+      <div class="price">
+        <input type="number" id="price" placeholder="price">
+        <input type="number" id="discount" placeholder="discount">
+        <small id="totale">0</small>
+      </div>
+      <input type="file" id="productImage">
+      <input type="text" id="category" placeholder="category">
+      <button id="submit">Create</button>
+    </div>
+
+    <div class="outputs">
+      <div class="searchbox">
+        <input type="text" id="search" placeholder="search">
+        <div id="btnSearch">
+          <button id="searchTitle">Search by title</button>
+          <button id="searchCategory">Search by category</button>
+        </div>
+      </div>
+
+      <table>
+        <thead>
+          <tr>
+            <th>product name</th>
+            <th>description</th>
+            <th>category</th>
+            <th>price</th>
+            <th>image</th>
+            <th>update</th>
+            <th>delete</th>
+          </tr>
+        </thead>
+        <tbody id="productTable"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <script>/*
+    const adminUser = "admin";
+    const adminPass = "1234";
+
+    let products = JSON.parse(localStorage.getItem("products")) || [];
+    let editIndex = -1;
+
+    // Login
+    function login() {
+      const user = document.getElementById("username").value;
+      const pass = document.getElementById("password").value;
+      if (user === adminUser && pass === adminPass) {
+        document.getElementById("loginSection").classList.add("hidden");
+        document.getElementById("crudSection").classList.remove("hidden");
+        loadProducts();
+      } else {
+        document.getElementById("loginMsg").innerText = "Invalid credentials!";
+      }
+    }
+
+    // تحديث التوتال
+    function updateTotal() {
+      const price = parseFloat(document.getElementById("price").value) || 0;
+      const discount = parseFloat(document.getElementById("discount").value) || 0;
+      document.getElementById("totale").textContent = price - discount;
+    }
+    document.getElementById("price").addEventListener("input", updateTotal);
+    document.getElementById("discount").addEventListener("input", updateTotal);
+
+    // حفظ أو تعديل المنتج
+    document.getElementById("submit").onclick = function () {
+      const title = document.getElementById("title").value;
+      const description = document.getElementById("description").value;
+      const price = document.getElementById("price").value;
+      const discount = document.getElementById("discount").value;
+      const category = document.getElementById("category").value;
+      const file = document.getElementById("productImage").files[0];
+
+      if (!(title && price && category)) {
+        alert("Name, Price and Category are required!");
+        return;
+      }
+
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function (e) {
+          saveProduct(title, description, price, discount, category, e.target.result);
+        };
+        reader.readAsDataURL(file);
+      } else {
+        saveProduct(title, description, price, discount, category, "");
+      }
+    };
+
+    // دالة الحفظ
+    function saveProduct(title, description, price, discount, category, image) {
+      const product = { title, description, price, discount, category, image };
+
+      if (editIndex === -1) {
+        products.push(product);
+      } else {
+        products[editIndex] = product;
+        editIndex = -1;
+        document.getElementById("submit").textContent = "Create";
+      }
+
+      localStorage.setItem("products", JSON.stringify(products));
+      clearForm();
+      loadProducts();
+    }
+
+    // تحميل المنتجات
+    function loadProducts(list = products) {
+      const tbody = document.querySelector("tbody");
+      tbody.innerHTML = "";
+      list.forEach((p, i) => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td>${p.title}</td>
+          <td>${p.description}</td>
+          <td>${p.category}</td>
+          <td>${p.price - (p.discount || 0)}</td>
+          <td><img src="${p.image}" width="60"></td>
+          <td><button onclick="editProduct(${i})">Update</button></td>
+          <td><button onclick="deleteProduct(${i})">Delete</button></td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    // مسح الفورم
+    function clearForm() {
+      document.getElementById("title").value = "";
+      document.getElementById("description").value = "";
+      document.getElementById("price").value = "";
+      document.getElementById("discount").value = "";
+      document.getElementById("category").value = "";
+      document.getElementById("productImage").value = "";
+      document.getElementById("totale").textContent = 0;
+    }
+
+    // تعديل
+    function editProduct(index) {
+      const p = products[index];
+      document.getElementById("title").value = p.title;
+      document.getElementById("description").value = p.description;
+      document.getElementById("price").value = p.price;
+      document.getElementById("discount").value = p.discount;
+      document.getElementById("category").value = p.category;
+
+      updateTotal();
+      editIndex = index;
+      document.getElementById("submit").textContent = "Update";
+
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    // حذف
+    function deleteProduct(index) {
+      products.splice(index, 1);
+      localStorage.setItem("products", JSON.stringify(products));
+      loadProducts();
+    }
+
+    // البحث
+    document.getElementById("searchTitle").onclick = function () {
+      const q = document.getElementById("search").value.toLowerCase();
+      const results = products.filter(p => p.title.toLowerCase().includes(q));
+      loadProducts(results);
+    };
+    document.getElementById("searchCategory").onclick = function () {
+      const q = document.getElementById("search").value.toLowerCase();
+      const results = products.filter(p => p.category.toLowerCase().includes(q));
+      loadProducts(results);
+    };
+
+    window.onload = loadProducts;
+    
+    
+    
+    
+  // الدالة الخاصة بإضافة أو تعديل منتج
+  function saveProduct(title, description, price, discount, category, image) {
+    const product = { title, description, price, discount, category, image };
+    
+    if (editIndex === -1) {
+      products.push(product); // إضافة المنتج إذا كان في وضع "إنشاء"
+    } else {
+      products[editIndex] = product; // تعديل المنتج إذا كان في وضع "تعديل"
+      editIndex = -1;
+      document.getElementById("submit").textContent = "Create";
+    }
+
+    // حفظ المنتجات في localStorage
+    localStorage.setItem("products", JSON.stringify(products));
+
+    // إعادة تحميل المنتجات في العرض
+    renderProducts();
+
+    // مسح الحقول بعد الإضافة
+    clearInputs();
+  }
+
+  // تحديث العرض تلقائيًا في صفحة الـ Store
+  function renderProducts(list = products) {
+    const tbody = document.getElementById("productTable");
+    tbody.innerHTML = ""; // مسح الجدول الحالي
+    list.forEach((p, i) => {
+      const row = `<tr>
+        <td>${p.title}</td>
+        <td>${p.description}</td>
+        <td>${p.category}</td>
+        <td>$${p.price}</td>
+        <td><img src="${p.img}" class="thumb" alt="${p.title}"></td>
+        <td><button class="action" onclick="editProduct(${i})">Update</button></td>
+        <td><button class="action danger" onclick="deleteProduct(${i})">Delete</button></td>
+      </tr>`;
+      tbody.innerHTML += row;
+    });
+  }
+  
+  
+  
+  
+  
+  
+  
+  function saveProduct(title, description, price, discount, category, image) {
+  const product = { title, description, price, discount, category, image };
+
+  if (editIndex === -1) {
+    products.push(product);
+  } else {
+    products[editIndex] = product;
+    editIndex = -1;
+    document.getElementById("submit").textContent = "Create";
+  }
+
+  localStorage.setItem("products", JSON.stringify(products)); // هنا التخزين
+  clearForm();
+  loadProducts();
+}*/
+
+
+
+
+// بيانات تسجيل الدخول
+const adminUser = "admin";
+const adminPass = "1234";
+
+// مصفوفة المنتجات (تتخزن في LocalStorage)
+let products = JSON.parse(localStorage.getItem("products")) || [];
+let editIndex = -1;
+
+// تسجيل الدخول
+function login() {
+  const user = document.getElementById("username").value;
+  const pass = document.getElementById("password").value;
+
+  if (user === adminUser && pass === adminPass) {
+    document.getElementById("loginSection").classList.add("hidden");
+    document.getElementById("crudSection").classList.remove("hidden");
+    loadProducts();
+  } else {
+    document.getElementById("loginMsg").innerText = "Invalid credentials!";
+  }
+}
+
+// إضافة أو تحديث منتج
+document.getElementById("submit").onclick = function () {
+  const title = document.getElementById("title").value;
+  const description = document.getElementById("description").value;
+  const price = document.getElementById("price").value;
+  const discount = document.getElementById("discount").value;
+  const category = document.getElementById("category").value;
+  const file = document.getElementById("productImage").files[0];
+
+  if (!title || !price || !category) {
+    alert("Title, Price, and Category are required!");
+    return;
+  }
+
+  const reader = new FileReader();
+  reader.onload = function (e) {
+    const product = {
+      title,
+      description,
+      price,
+      discount,
+      category,
+      image: e.target.result
+    };
+
+    if (editIndex === -1) {
+      products.push(product);
+    } else {
+      products[editIndex] = product;
+      editIndex = -1;
+      document.getElementById("submit").textContent = "Create";
+    }
+
+    localStorage.setItem("products", JSON.stringify(products));
+    clearForm();
+    loadProducts();
+  };
+
+  if (file) {
+    reader.readAsDataURL(file);
+  } else {
+    // لو مفيش صورة جديدة
+    const product = {
+      title,
+      description,
+      price,
+      discount,
+      category,
+      image: editIndex !== -1 ? products[editIndex].image : ""
+    };
+
+    if (editIndex === -1) {
+      products.push(product);
+    } else {
+      products[editIndex] = product;
+      editIndex = -1;
+      document.getElementById("submit").textContent = "Create";
+    }
+
+    localStorage.setItem("products", JSON.stringify(products));
+    clearForm();
+    loadProducts();
+  }
+};
+
+// تحميل المنتجات في الجدول
+function loadProducts(list = products) {
+  const tbody = document.getElementById("productTable");
+  tbody.innerHTML = "";
+  list.forEach((p, i) => {
+    tbody.innerHTML += `
+      <tr>
+        <td>${p.title}</td>
+        <td>${p.description}</td>
+        <td>${p.category}</td>
+        <td>${p.price - (p.discount || 0)}</td>
+        <td><img src="${p.image}" width="60"></td>
+        <td><button onclick="editProduct(${i})">Update</button></td>
+        <td><button onclick="deleteProduct(${i})">Delete</button></td>
+      </tr>
+    `;
+  });
+}
+
+// تعديل منتج
+function editProduct(i) {
+  const p = products[i];
+  document.getElementById("title").value = p.title;
+  document.getElementById("description").value = p.description;
+  document.getElementById("price").value = p.price;
+  document.getElementById("discount").value = p.discount;
+  document.getElementById("category").value = p.category;
+  editIndex = i;
+  document.getElementById("submit").textContent = "Update";
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+// حذف منتج
+function deleteProduct(i) {
+  products.splice(i, 1);
+  localStorage.setItem("products", JSON.stringify(products));
+  loadProducts();
+}
+
+// مسح الفورم
+function clearForm() {
+  document.getElementById("title").value = "";
+  document.getElementById("description").value = "";
+  document.getElementById("price").value = "";
+  document.getElementById("discount").value = "";
+  document.getElementById("category").value = "";
+  document.getElementById("productImage").value = "";
+  document.getElementById("totale").textContent = "0";
+}
+
+// حساب السعر بعد الخصم
+function updateTotal() {
+  const price = parseFloat(document.getElementById("price").value) || 0;
+  const discount = parseFloat(document.getElementById("discount").value) || 0;
+  document.getElementById("totale").textContent = price - discount;
+}
+document.getElementById("price").addEventListener("input", updateTotal);
+document.getElementById("discount").addEventListener("input", updateTotal);
+
+// البحث
+document.getElementById("searchTitle").onclick = function () {
+  const q = document.getElementById("search").value.toLowerCase();
+  const results = products.filter(p => p.title.toLowerCase().includes(q));
+  loadProducts(results);
+};
+
+document.getElementById("searchCategory").onclick = function () {
+  const q = document.getElementById("search").value.toLowerCase();
+  const results = products.filter(p => p.category.toLowerCase().includes(q));
+  loadProducts(results);
+};
+  </script>
+
+</body>
+</html>

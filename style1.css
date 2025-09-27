@@ -1,0 +1,108 @@
+* {
+    margin:0;
+    padding: 0;
+}
+body{
+    font-family: serif ;
+}
+.crud{
+    width:80%;
+    margin:auto ;
+    align-items:center ;
+    justify-content:center ;
+}
+.head{
+    text-align:center ;
+   text-transform: uppercase; 
+   margin:1rem 0;
+}
+input{
+    width: 100%;
+    height:2rem ;
+    align-content:center ;
+    outline:none;
+    border: none ;
+    box-shadow:0 0 0.5rem#000000;
+    margin:0.5rem 0 ;
+    border-radius:1rem ;
+    padding: 0.5rem ;
+    transition:0.3s ;
+}
+input:focus{
+    background: #000000 ;
+    color:#FFFFFF ;
+    transform: scale(1.1 );
+}
+.price{
+     display:flex ;
+     flex-wrap:wrap ;
+     justify-content:space-between ;
+ }
+.price input{
+    width:40%;
+}
+#totale{
+    background:#000000 ;
+    color: #FFFFFF ;
+    padding:0.5rem  ;
+    border-radius:1rem ;
+    box-shadow:0 0 1rem #000000 ;
+    align-content: center ;
+    
+}
+#totale::before{
+    content: "totale:";
+}
+button{
+color:#FFFFFF ;
+    background:#985D11 ;
+    border-radius: 3rem ;
+    border: none ;
+    width:100%;
+    transition:0.3s ;
+    height:2rem ;
+    font-weight:1000 ;
+    font-size:1rem ;
+      margin:1rem ;
+}
+#submit:hover{
+    box-shadow: 0 0 1rem #985D11 ;
+   
+}
+#productImage{
+    border: none ;
+    height:5rem ;
+}
+.outputs{
+
+}
+.outputs .searchbox{
+    display: flex;
+align-items:center;
+    flex-wrap:wrap ;
+}
+#btnSearch {
+    align-items:center;
+    display: flex ;
+    flex-grow: 1;
+    /*flex-wrap :wrap ;*/
+    justify-content:space-between ;
+} 
+#btnSearch button {
+    padding: 0 2rem ;
+    text-align:center ;
+    height:5rem ;
+}
+table{
+    width:100%;
+    gap: 1rem ;
+    flex-wrap:wrap ;
+    margin:auto ;
+}
+th, td{
+    align-items:center ;
+    padding:5px ;
+    /*border: 1px solid #E3C9A6 ;*/
+    height:5rem ;
+width:100% ;
+}
